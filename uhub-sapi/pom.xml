@@ -17,6 +17,80 @@
 		<mule.maven.plugin.version>4.3.0</mule.maven.plugin.version>
 	</properties>
 
+	<profiles>
+		<profile>
+			<id>DEV</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.mule.tools.maven</groupId>
+						<artifactId>mule-maven-plugin</artifactId>
+						<version>${mule.maven.plugin.version}</version>
+						<extensions>true</extensions>
+						<configuration>
+							<cloudhub2Deployment>
+								<environment>DEV</environment>
+								<replicas>1</replicas>
+								<vCores>0.1</vCores>
+
+								<applicationName>uhub-sapi-dev</applicationName>
+								<properties>
+									<env>dev</env>
+									<api.id>20079903</api.id>
+									<anypoint.platform.client_id>bc79867cec5f4a6590498346604cbf91</anypoint.platform.client_id>
+									<anypoint.platform.client_secret>AEe052Bcd75043d48D41940b81522690</anypoint.platform.client_secret>
+								</properties>
+								<deploymentSettings>
+									<generateDefaultPublicUrl>true</generateDefaultPublicUrl>
+									<http>
+										<inbound>
+											<lastMileSecurity>true</lastMileSecurity>
+										</inbound>
+									</http>
+								</deploymentSettings>
+							</cloudhub2Deployment>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>TEST</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.mule.tools.maven</groupId>
+						<artifactId>mule-maven-plugin</artifactId>
+						<version>${mule.maven.plugin.version}</version>
+						<extensions>true</extensions>
+						<configuration>
+							<cloudhub2Deployment>
+								<environment>TEST</environment>
+								<replicas>1</replicas>
+								<vCores>0.1</vCores>
+								<applicationName>uhub-sapi-test</applicationName>
+								<properties>
+									<env>test</env>
+									<api.id>20079992</api.id>
+									<anypoint.platform.client_id>c1d46f8aa2b94a5aac60a7f6fae0e4f8</anypoint.platform.client_id>
+									<anypoint.platform.client_secret>5a7F65D63f6c444cAc3b0418C8697711</anypoint.platform.client_secret>
+								</properties>
+								<deploymentSettings>
+									<generateDefaultPublicUrl>true</generateDefaultPublicUrl>
+									<http>
+										<inbound>
+											<lastMileSecurity>true</lastMileSecurity>
+										</inbound>
+									</http>
+								</deploymentSettings>
+							</cloudhub2Deployment>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+
 	<build>
 		<plugins>
 			<plugin>
@@ -36,6 +110,37 @@
 							<artifactId>mysql-connector-java</artifactId>
 						</sharedLibrary>
 					</sharedLibraries>
+					<repository>Exchange2</repository>
+					<classifier>mule-application</classifier>
+					<cloudhub2Deployment>
+						<uri>https://anypoint.mulesoft.com</uri>
+						<provider>MC</provider>
+						<target>Cloudhub-US-East-2</target>
+						<muleVersion>4.8.0</muleVersion>
+						<username>${username}</username>
+						<password>${password}</password>
+						<integrations>
+							<services>
+								<objectStoreV2>
+									<enabled>true</enabled>
+								</objectStoreV2>
+							</services>
+						</integrations>
+						<replicas>1</replicas>
+						<properties>
+							<http.port.value>8081</http.port.value>
+							<anypoint.platform.base_uri>https://anypoint.mulesoft.com</anypoint.platform.base_uri>
+							<anypoint.platform.analytics_base_uri>https://analytics-ingest.anypoint.mulesoft.com</anypoint.platform.analytics_base_uri>
+						</properties>
+						<deploymentSettings>
+							<generateDefaultPublicUrl>true</generateDefaultPublicUrl>
+							<http>
+								<inbound>
+									<lastMileSecurity>true</lastMileSecurity>
+								</inbound>
+							</http>
+						</deploymentSettings>
+					</cloudhub2Deployment>
 				</configuration>
 			</plugin>
 		</plugins>
