@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:os="http://www.mulesoft.org/schema/mule/os"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/os http://www.mulesoft.org/schema/mule/os/current/mule-os.xsd">
+	
+	<os:object-store name="Object_store" doc:name="Object store" doc:id="2367ece2-1c80-48b7-be6c-7b38f247dfb6" />
+	<flow name="put:\cases:application\json:uhub-sapi-config">
+        <logger level="INFO" doc:name="Start Log" doc:id="2ea66d81-ce44-4599-b41c-b172f5990004" message="Start log..."/>
+		<set-variable value="#[attributes.headers.'x-correlation-id' default &quot;&quot;]" doc:name="Set correlationId" doc:id="889e0902-96e2-4a3c-8c27-78eea07d0f7f" variableName="correlationId" />
+		<ee:transform doc:name="Prepare Covid Case Payload" doc:id="facf545f-cb7f-4903-bf59-3c2e8f626f20" >
+			<ee:message >
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="covidCasePayload" ><![CDATA[%dw 2.0
+output application/java
+---
+{
+	case_id: payload.caseID,
+	source: payload.source,
+	case_type: payload.caseType,
+	first_name: payload.firstName,
+	last_name: payload.lastName,
+	phone: payload.phone,
+	email: payload.email,
+	date_of_birth: payload.dateOfBirth as String {
+		format: "yyyy-MM-dd"
+	},
+	national_id: payload.nationalID,
+	national_id_type: payload.nationalIDType,
+	street_address: payload.address.streetAddress,
+	city: payload.address.city,
+	state: upper(payload.address.state),
+	postal: payload.address.postal,
+	country: payload.address.country,
+	update_date: now() as String {
+		format: "yyyy-MM-dd"
+	},
+	create_by: "UHIS",
+	update_by: "UHIS"
+}
+]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<idempotent-message-validator doc:name="Idempotent Message Validator" doc:id="e3bfc0f6-6db4-4a71-a0b5-b9073fcdc6d7" idExpression='#[vars.covidCasePayload pluck $ joinBy  ""]' objectStore="Object_store"/>
+		<flow-ref doc:name="update-covid-case-sub-flow" doc:id="4fd97169-f259-44e6-97c3-6960626e03f4" name="update-covid-case-sub-flow" />
+		<ee:transform doc:name="Set Success Response" doc:id="18b6bb3c-fafc-4c16-b841-2c6bc056063d" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+if (payload.affectedRows > 0 ) {
+	caseID: vars.covidCasePayload.case_id
+} else {}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="End Log" doc:id="2b7e295e-47ee-4e10-9602-784f48168bc3" message='transactionID: #[vars.transactionId]], correlationID: #[vars.correlationID], message: "Completed update covid case flow", payload: #[payload]' />
+		<error-handler >
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="bfbec715-df2e-4ac2-9c5b-1798ad47783f" type="MULE:DUPLICATE_MESSAGE">
+				<set-variable value="#[400]" doc:name="Set HTTP Status - 400" doc:id="88308828-6aa9-4a83-914a-c96788064948" variableName="httpStatus" />
+				<set-variable value="Bad request" doc:name="set Error Message" doc:id="d10e8840-bb04-4ae6-a343-f3446dd863a2" variableName="errorMessage" />
+				<set-variable value='#["Duplicate request received"]' doc:name="Set Error Description" doc:id="52a4c9a9-62cd-4274-b319-d665ea9ca88e" variableName="errorDescription"/>
+				<flow-ref doc:name="global-prepare-error-response-sub-flow" doc:id="88afdf70-f696-449f-8070-b0b87696654b" name="global-prepare-error-response-sub-flow" />
+			</on-error-continue>
+		</error-handler>
+</flow>
+	
+	</mule>
