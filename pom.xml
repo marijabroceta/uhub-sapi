@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>0a7e3664-60a3-418a-ae63-f374306df691</groupId>
@@ -37,8 +39,7 @@
 								<properties>
 									<env>dev</env>
 									<api.id>20116669</api.id>
-									<anypoint.platform.client_id>bc79867cec5f4a6590498346604cbf91</anypoint.platform.client_id>
-									<anypoint.platform.client_secret>AEe052Bcd75043d48D41940b81522690</anypoint.platform.client_secret>
+									
 								</properties>
 								<secureProperties>
 									<enc.key>uhubSecretKey</enc.key>
@@ -75,10 +76,9 @@
 								<properties>
 									<env>test</env>
 									<api.id>20079992</api.id>
-									<anypoint.platform.client_id>c1d46f8aa2b94a5aac60a7f6fae0e4f8</anypoint.platform.client_id>
-									<anypoint.platform.client_secret>5a7F65D63f6c444cAc3b0418C8697711</anypoint.platform.client_secret>
+
 								</properties>
-								
+
 								<deploymentSettings>
 									<generateDefaultPublicUrl>true</generateDefaultPublicUrl>
 									<http>
@@ -135,6 +135,8 @@
 							<http.port.value>8081</http.port.value>
 							<anypoint.platform.base_uri>https://anypoint.mulesoft.com</anypoint.platform.base_uri>
 							<anypoint.platform.analytics_base_uri>https://analytics-ingest.anypoint.mulesoft.com</anypoint.platform.analytics_base_uri>
+							<anypoint.platform.client_id>04e09a1a15cb4c009d262f53133795dd</anypoint.platform.client_id>
+							<anypoint.platform.client_secret>3869e4f90C2C419Da70e31993DDbF9E5</anypoint.platform.client_secret>
 						</properties>
 						<deploymentSettings>
 							<generateDefaultPublicUrl>true</generateDefaultPublicUrl>
