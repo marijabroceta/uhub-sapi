@@ -1,0 +1,13 @@
+http:
+  port: "8081"
+
+database:
+  uhub:
+    host: "SG-sage-grip-1615-11164-mysql-master.servers.mongodirector.com"
+    port: "3306"
+    user: "courseuser"
+    password: "![qpCpv8rZTwnaM6uXXoPitw==]"
+    database: "course-db"
+
+api:
+ id: "20128961"

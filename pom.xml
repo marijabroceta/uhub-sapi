@@ -39,7 +39,7 @@
 								<properties>
 									<env>dev</env>
 									<api.id>20116669</api.id>
-									
+
 								</properties>
 								<secureProperties>
 									<enc.key>uhubSecretKey</enc.key>
@@ -75,9 +75,12 @@
 								<applicationName>uhub-sapi-test</applicationName>
 								<properties>
 									<env>test</env>
-									<api.id>20079992</api.id>
+									<api.id>20128961</api.id>
 
 								</properties>
+								<secureProperties>
+									<enc.key>uhubSecretKey</enc.key>
+								</secureProperties>
 
 								<deploymentSettings>
 									<generateDefaultPublicUrl>true</generateDefaultPublicUrl>
